@@ -43,6 +43,7 @@
             this.glControl1.VSync = false;
             this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
             this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl1_Paint);
+            this.glControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glControl1_KeyDown);
             // 
             // timer1
             // 
@@ -55,7 +56,7 @@
             this.ClientSize = new System.Drawing.Size(1253, 601);
             this.Controls.Add(this.glControl1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "г";
             this.ResumeLayout(false);
 
         }

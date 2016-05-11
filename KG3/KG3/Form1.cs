@@ -14,7 +14,12 @@ namespace KG3
 {
     public partial class Form1 : Form
     {
+        Camera cam = new Camera();
+
         private bool loaded = false;
+        private bool IsOrtho = false;
+        Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(80 * Math.PI / 180), 1, 20, 500);
+        Matrix4 ortho = Matrix4.CreateOrthographic(5, 5, 20, 100);
 
         public Form1()
         {
@@ -27,13 +32,17 @@ namespace KG3
             GL.ClearColor(Color.Black);
             GL.Enable(EnableCap.DepthTest);
 
-            Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(80 * Math.PI / 180), 1, 20, 500);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perspect);
+           
 
-            Matrix4 modelview = Matrix4.LookAt(30, 70, 80, 0, 0, 0, 0, 1, 0);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref modelview);
+            GL.MatrixMode(MatrixMode.Projection);
+
+            if (IsOrtho) GL.LoadMatrix(ref ortho);
+                else GL.LoadMatrix(ref perspect);
+
+            //Matrix4 modelview = Matrix4.LookAt(70, 70, 70, 0, 0, 0, 0, 1, 0);
+            //GL.MatrixMode(MatrixMode.Modelview);
+            //GL.LoadMatrix(ref modelview);
+            cam.Look();
             timer1.Start();
         }
 
@@ -55,102 +64,62 @@ namespace KG3
         private void glControl1_Paint(object sender, PaintEventArgs e)
         {
             if (!loaded)
-                return;
+                return;       
 
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);         
 
-
-            GL.Color3(Color.White);
-            GL.Begin(BeginMode.Lines);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(50, 0, 0);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, 50, 0);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, 0, 50);
-            GL.End();
-
-            float width = 20;
-            /*задняя*/
-            GL.Color3(Color.Red);
-            GL.Begin(BeginMode.Polygon);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(width, 0, 0);
-            GL.Vertex3(width, width, 0);
-            GL.Vertex3(0, width, 0);
-            GL.End();
-
-            /*левая*/
-            GL.Begin(BeginMode.Polygon);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, 0, width);
-            GL.Vertex3(0, width, width);
-            GL.Vertex3(0, width, 0);
-            GL.End();
-
-            /*нижняя*/
-            GL.Begin(BeginMode.Polygon);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, 0, width);
-            GL.Vertex3(width, 0, width);
-            GL.Vertex3(width, 0, 0);
-            GL.End();
-
-            /*верхняя*/
-            GL.Begin(BeginMode.Polygon);
-            GL.Vertex3(0, width, 0);
-            GL.Vertex3(0, width, width);
-            GL.Vertex3(width, width, width);
-            GL.Vertex3(width, width, 0);
-            GL.End();
-
-            /*передняя*/
-            GL.Begin(BeginMode.Polygon);
-            GL.Vertex3(0, 0, width);
-            GL.Vertex3(width, 0, width);
-            GL.Vertex3(width, width, width);
-            GL.Vertex3(0, width, width);
-            GL.End();
-
-            /*правая*/
-            GL.Begin(BeginMode.Polygon);
-            GL.Vertex3(width, 0, 0);
-            GL.Vertex3(width, 0, width);
-            GL.Vertex3(width, width, width);
-            GL.Vertex3(width, width, 0);
-            GL.End();
-
-            /*ребра*/
-            GL.Color3(Color.Black);
-            GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, width, 0);
-            GL.Vertex3(width, width, 0);
-            GL.Vertex3(width, 0, 0);
-            GL.End();
-
-            GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(width, 0, 0);
-            GL.Vertex3(width, 0, width);
-            GL.Vertex3(width, width, width);
-            GL.Vertex3(width, width, 0);
-            GL.End();
-
-            GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(0, 0, width);
-            GL.Vertex3(width, 0, width);
-            GL.Vertex3(width, width, width);
-            GL.Vertex3(0, width, width);
-            GL.End();
-
-            GL.Begin(BeginMode.LineLoop);
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, 0, width);
-            GL.Vertex3(0, width, width);
-            GL.Vertex3(0, width, 0);
-            GL.End();
+            Figure f = new Figure();
+            f.DrawCarcass();
+            f.DrawSurface();
 
             glControl1.SwapBuffers();
+        }
+
+        private void glControl1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!loaded) return;
+            cam.Look();
+
+            if (e.KeyCode == Keys.A)
+            {
+                cam.MoveLeftward();
+            }
+            if (e.KeyCode == Keys.D)
+            {
+                cam.MoveRighward();
+            }
+            if (e.KeyCode == Keys.O)
+                IsOrtho = !IsOrtho;
+
+            if(e.KeyCode==Keys.W)
+            {
+                cam.MoveForward();
+            }
+            if (e.KeyCode == Keys.S)
+            {
+                cam.MoveBackward();
+            }
+
+            if (e.KeyCode == Keys.R)
+                cam.MoveUp();
+            if (e.KeyCode == Keys.F)
+                cam.MoveDown();
+
+            if (e.KeyCode == Keys.R)
+                cam.MoveUp();
+            if (e.KeyCode == Keys.F)
+                cam.MoveDown();
+
+            if (e.KeyCode == Keys.J)
+                cam.SeeLeft();
+            if (e.KeyCode == Keys.L)
+                cam.SeeRight();
+            if (e.KeyCode == Keys.I)
+                cam.SeeUp();
+            if (e.KeyCode == Keys.K)
+                cam.SeeDown();
+
+            glControl1.Invalidate();
         }
     }
 }
