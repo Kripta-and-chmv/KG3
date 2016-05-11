@@ -14,12 +14,15 @@ namespace KG3
 {
     public partial class Form1 : Form
     {
-        Camera cam = new Camera();
-
+        Camera cam;
+        private bool lookMode = false;
         private bool loaded = false;
         private bool IsOrtho = false;
         Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(80 * Math.PI / 180), 1, 20, 500);
         Matrix4 ortho = Matrix4.CreateOrthographic(5, 5, 20, 100);
+
+        private Point mouseCoord = new Point(0, 0), //Текущие координаты
+            mouseCoordTemp = new Point(0, 0); //Предыдущие координаты
 
         public Form1()
         {
@@ -36,13 +39,12 @@ namespace KG3
 
             GL.MatrixMode(MatrixMode.Projection);
 
-            if (IsOrtho) GL.LoadMatrix(ref ortho);
+            if (chckbxProection.Checked) GL.LoadMatrix(ref ortho);
                 else GL.LoadMatrix(ref perspect);
 
-            //Matrix4 modelview = Matrix4.LookAt(70, 70, 70, 0, 0, 0, 0, 1, 0);
-            //GL.MatrixMode(MatrixMode.Modelview);
-            //GL.LoadMatrix(ref modelview);
-            cam.Look();
+            cam = new Camera { Position = new Vector3(0,0, -100) };
+            cam.Resize(glControl1.Width, glControl1.Height);
+
             timer1.Start();
         }
 
@@ -64,13 +66,17 @@ namespace KG3
         private void glControl1_Paint(object sender, PaintEventArgs e)
         {
             if (!loaded)
-                return;       
+                return;
 
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);         
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            cam.Update();
+            GL.LoadMatrix(ref cam.Matrix);
+
 
             Figure f = new Figure();
             f.DrawCarcass();
-            f.DrawSurface();
+            if(!chckbxCarcass.Checked)
+                f.DrawSurface();
 
             glControl1.SwapBuffers();
         }
@@ -78,48 +84,57 @@ namespace KG3
         private void glControl1_KeyDown(object sender, KeyEventArgs e)
         {
             if (!loaded) return;
-            cam.Look();
-
+            if (e.KeyCode == Keys.Q)
+                cam.MoveY(1);
+            if (e.KeyCode == Keys.E)
+                cam.MoveY(-1);
             if (e.KeyCode == Keys.A)
-            {
-                cam.MoveLeftward();
-            }
+                cam.MoveX(1);
             if (e.KeyCode == Keys.D)
-            {
-                cam.MoveRighward();
-            }
-            if (e.KeyCode == Keys.O)
-                IsOrtho = !IsOrtho;
+                cam.MoveX(-1);
 
-            if(e.KeyCode==Keys.W)
-            {
-                cam.MoveForward();
-            }
+            if (e.KeyCode == Keys.W)
+                cam.MoveZ(1);
             if (e.KeyCode == Keys.S)
+                cam.MoveZ(-1);
+        }
+
+        private void glControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            lookMode = true;
+            glControl1.Cursor = Cursors.SizeAll; //меняем указатель
+            mouseCoord.X = e.X;
+            mouseCoord.Y = e.Y;
+        }
+
+        private void glControl1_MouseUp(object sender, MouseEventArgs e)
+        {
+            lookMode = false;
+            glControl1.Cursor = Cursors.Arrow; //меняем указатель
+        }
+       
+        private void glControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (lookMode)
             {
-                cam.MoveBackward();
+                mouseCoordTemp.X = e.X;
+                mouseCoordTemp.Y = e.Y;
+
+                var mouseX = mouseCoord.X - mouseCoordTemp.X;
+                var mouseY = mouseCoord.Y - mouseCoordTemp.Y;
+
+                if (Math.Abs(mouseX) > Math.Abs(mouseY))
+                    if (mouseX > 0)
+                        cam.TurnY(0.05f);
+                    else
+                        cam.TurnY(-0.05f);
+                else if (mouseY > 0)
+                    cam.TurnX(-0.05f);
+                else
+                    cam.TurnX(0.05f);
+
+                mouseCoord = mouseCoordTemp;
             }
-
-            if (e.KeyCode == Keys.R)
-                cam.MoveUp();
-            if (e.KeyCode == Keys.F)
-                cam.MoveDown();
-
-            if (e.KeyCode == Keys.R)
-                cam.MoveUp();
-            if (e.KeyCode == Keys.F)
-                cam.MoveDown();
-
-            if (e.KeyCode == Keys.J)
-                cam.SeeLeft();
-            if (e.KeyCode == Keys.L)
-                cam.SeeRight();
-            if (e.KeyCode == Keys.I)
-                cam.SeeUp();
-            if (e.KeyCode == Keys.K)
-                cam.SeeDown();
-
-            glControl1.Invalidate();
         }
     }
 }

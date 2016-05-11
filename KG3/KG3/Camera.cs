@@ -10,75 +10,81 @@ namespace KG3
 {
     class Camera
     {
-        private Vector3 mPos= new Vector3(70, 70, 70);   // Вектор позиции камеры
-        private Vector3 mView= new Vector3(0, 0, 0);   // Направление, куда смотрит камера
-        private Vector3 mUp = new Vector3(0, 1, 0);     // Вектор верхнего направления
-        private Vector3 mStrafe; // Вектор для стрейфа (движения влево и вправо) камеры
+        public OpenTK.Vector3 Position;
+        public OpenTK.Vector3 Rotation;
+        public OpenTK.Quaternion Orientation;
 
-        public void Look()
+        public OpenTK.Matrix4 Matrix;
+        public OpenTK.Matrix4 Model;
+        public OpenTK.Matrix4 Projection;
+
+        public Camera()
         {
-            Matrix4 lookat = Matrix4.LookAt(mPos, mView, mUp);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref lookat);
+            Matrix = OpenTK.Matrix4.Identity;
+            Projection = OpenTK.Matrix4.Identity;
+            Orientation = OpenTK.Quaternion.Identity;
         }
 
-        public void MoveForward()
+        public void Update()
         {
-            //GL.MatrixMode(MatrixMode.Projection);
-            //GL.Translate(0, 0, 5);
-            mPos.Z -= 5;
-            mView.Z -= 5;
+            Orientation =
+                OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y) *
+                OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitX, Rotation.X);
 
+            var forward = OpenTK.Vector3.Transform(OpenTK.Vector3.UnitZ, Orientation);
+            Model = OpenTK.Matrix4.LookAt(Position, Position + forward, OpenTK.Vector3.UnitY);
+            Matrix = Model * Projection;
         }
-        public void MoveBackward()
-        {
-            //GL.MatrixMode(MatrixMode.Projection);
-            //GL.Translate(0, 0, -5);
-            mPos.Z += 5;
-            mView.Z += 5;
-        }
-        public void MoveRighward()
-        {
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.Translate(-5, 0, 0);
-        }
-        public void MoveLeftward()
-        {
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.Translate(5, 0, 0);
-        }
-        public void MoveUp()
-        {
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.Translate(0, -5, 0);
-        }
-        public void MoveDown()
-        {
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.Translate(0, 5, 0);
-        }
-        public void SeeLeft()
-        {
 
-            //GL.MatrixMode(MatrixMode.Projection);
-            //GL.Rotate(-5, 0, 1, 0);
-            mView.X -= 5;
-        }
-        public void SeeRight()
+        public void Resize(int width, int height)
         {
-            //GL.MatrixMode(MatrixMode.Projection);
-            //GL.Rotate(5, 0, 1, 0);
-            mView.X += 5;
+            Projection = OpenTK.Matrix4.CreatePerspectiveFieldOfView(
+                OpenTK.MathHelper.PiOver4, (float)width / height, 0.1f, 1000f
+            );
         }
-        public void SeeUp()
+
+        public void TurnX(float a)
         {
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.Rotate(-5, 1, 0, 0);
+            Rotation.X += a;
+            Rotation.X = OpenTK.MathHelper.Clamp(Rotation.X, -1.57f, 1.57f);
         }
-        public void SeeDown()
+
+        public void TurnY(float a)
         {
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.Rotate(5, 1, 0, 0);
+            Rotation.Y += a;
+            Rotation.Y = ClampCircular(Rotation.Y, 0, OpenTK.MathHelper.TwoPi);
+        }
+
+        public void MoveX(float a)
+        {
+            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitX * a, OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y));
+        }
+
+        public void MoveY(float a)
+        {
+            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitY * a, OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y));
+        }
+
+        public void MoveZ(float a)
+        {
+            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitZ * a, OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y));
+        }
+
+        public void MoveYLocal(float a)
+        {
+            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitY * a, Orientation);
+        }
+
+        public void MoveZLocal(float a)
+        {
+            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitZ * a, Orientation);
+        }
+
+        public static float ClampCircular(float n, float min, float max)
+        {
+            if (n >= max) n -= max;
+            if (n < min) n += max;
+            return n;
         }
     }
 }
