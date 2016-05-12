@@ -10,29 +10,30 @@ namespace KG3
 {
     class Camera
     {
-        public OpenTK.Vector3 Position;
-        public OpenTK.Vector3 Rotation;
-        public OpenTK.Quaternion Orientation;
+        public Vector3 Position = new Vector3(0, 0, -100);
+        public Vector3 Rotation = new Vector3(0, 0, 0);
+        public Quaternion Orientation;
 
-        public OpenTK.Matrix4 Matrix;
-        public OpenTK.Matrix4 Model;
-        public OpenTK.Matrix4 Projection;
+        public Matrix4 Matrix;
+        public Matrix4 Model;
+        public Matrix4 Projection;
 
         public Camera()
         {
-            Matrix = OpenTK.Matrix4.Identity;
-            Projection = OpenTK.Matrix4.Identity;
-            Orientation = OpenTK.Quaternion.Identity;
+            Matrix = Matrix4.Identity;
+            Projection = Matrix4.Identity;
+            Orientation = Quaternion.Identity;
         }
 
         public void Update()
         {
             Orientation =
-                OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y) *
-                OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitX, Rotation.X);
+                Quaternion.FromAxisAngle(Vector3.UnitY, Rotation.Y) *
+                Quaternion.FromAxisAngle(Vector3.UnitX, Rotation.X);
 
-            var forward = OpenTK.Vector3.Transform(OpenTK.Vector3.UnitZ, Orientation);
-            Model = OpenTK.Matrix4.LookAt(Position, Position + forward, OpenTK.Vector3.UnitY);
+            var forward = Vector3.Transform(Vector3.UnitZ, Orientation);
+            Model = Matrix4.LookAt(Position, Position + forward, Vector3.UnitY);
+
             Matrix = Model * Projection;
         }
 

@@ -18,8 +18,6 @@ namespace KG3
         private bool lookMode = false;
         private bool loaded = false;
         private bool IsOrtho = false;
-        Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(80 * Math.PI / 180), 1, 20, 500);
-        Matrix4 ortho = Matrix4.CreateOrthographic(5, 5, 20, 100);
 
         private Point mouseCoord = new Point(0, 0), //Текущие координаты
             mouseCoordTemp = new Point(0, 0); //Предыдущие координаты
@@ -34,15 +32,21 @@ namespace KG3
             loaded = true;
             GL.ClearColor(Color.Black);
             GL.Enable(EnableCap.DepthTest);
+            GL.Viewport(0, 0, glControl1.ClientSize.Width, glControl1.ClientSize.Height);
 
-           
+
+            float aspect_ratio = Width / (float)Height;
+            Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(50 * Math.PI / 180), aspect_ratio, 10, 200);
+            Matrix4 ortho = Matrix4.CreateOrthographic(Width, Height, 10, 200);
 
             GL.MatrixMode(MatrixMode.Projection);
 
             if (chckbxProection.Checked) GL.LoadMatrix(ref ortho);
                 else GL.LoadMatrix(ref perspect);
+            //GL.MatrixMode(MatrixMode.Modelview);
 
-            cam = new Camera { Position = new Vector3(0,0, -100) };
+            cam = new Camera {};
+
             cam.Resize(glControl1.Width, glControl1.Height);
 
             timer1.Start();
@@ -72,13 +76,28 @@ namespace KG3
             cam.Update();
             GL.LoadMatrix(ref cam.Matrix);
 
-
             Figure f = new Figure();
             f.DrawCarcass();
             if(!chckbxCarcass.Checked)
                 f.DrawSurface();
 
             glControl1.SwapBuffers();
+        }
+
+        private void SwitchProjection()
+        {
+            IsOrtho = !IsOrtho;
+
+            float aspect_ratio = Width / (float)Height;
+            GL.MatrixMode(MatrixMode.Projection);
+
+            Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(90 * Math.PI / 180), aspect_ratio, 20, 500);
+            Matrix4 ortho = Matrix4.CreateOrthographic(Width, Height, 500, 500);
+
+            if (IsOrtho) GL.LoadMatrix(ref ortho);
+            else GL.LoadMatrix(ref perspect);
+
+            GL.MatrixMode(MatrixMode.Modelview);
         }
 
         private void glControl1_KeyDown(object sender, KeyEventArgs e)
@@ -112,7 +131,12 @@ namespace KG3
             lookMode = false;
             glControl1.Cursor = Cursors.Arrow; //меняем указатель
         }
-       
+
+        private void chckbxProection_CheckedChanged(object sender, EventArgs e)
+        {
+            SwitchProjection();
+        }
+
         private void glControl1_MouseMove(object sender, MouseEventArgs e)
         {
             if (lookMode)

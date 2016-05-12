@@ -73,6 +73,7 @@
             this.chckbxProection.TabIndex = 1;
             this.chckbxProection.Text = "Ортографическая";
             this.chckbxProection.UseVisualStyleBackColor = true;
+            this.chckbxProection.CheckedChanged += new System.EventHandler(this.chckbxProection_CheckedChanged);
             // 
             // Form1
             // 
