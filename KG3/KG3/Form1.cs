@@ -19,6 +19,7 @@ namespace KG3
         private bool loaded = false;
         private bool IsOrtho = false;
         private bool IsNormalized = false;
+        private int texId;
 
         private Point mouseCoord = new Point(0, 0), //Текущие координаты
             mouseCoordTemp = new Point(0, 0); //Предыдущие координаты
@@ -50,6 +51,7 @@ namespace KG3
 
             cam.Resize(glControl1.Width, glControl1.Height);
 
+            texId = Texture.LoadTexture("texture.bmp");
             timer1.Start();
         }
 
@@ -81,6 +83,7 @@ namespace KG3
             f.DrawCarcass();
             if(!chckbxCarcass.Checked)
                 f.DrawSurface();
+            //свет
             if (checkBox1.Checked)
                 Lighting.On();
 
