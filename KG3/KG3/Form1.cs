@@ -18,6 +18,7 @@ namespace KG3
         private bool lookMode = false;
         private bool loaded = false;
         private bool IsOrtho = false;
+        private bool IsNormalized = false;
 
         private Point mouseCoord = new Point(0, 0), //Текущие координаты
             mouseCoordTemp = new Point(0, 0); //Предыдущие координаты
@@ -80,6 +81,8 @@ namespace KG3
             f.DrawCarcass();
             if(!chckbxCarcass.Checked)
                 f.DrawSurface();
+            if (checkBox1.Checked)
+                Lighting.On();
 
             glControl1.SwapBuffers();
         }
@@ -137,6 +140,18 @@ namespace KG3
             SwitchProjection();
         }
 
+        private void chkbxNormal_CheckedChanged(object sender, EventArgs e)
+        {
+            SwitchNormalize();
+        }
+        private void SwitchNormalize()
+        {
+            IsNormalized = !IsNormalized;
+            if (IsNormalized)
+                GL.Enable(EnableCap.Normalize);
+            else
+                GL.Disable(EnableCap.Normalize);
+        }
         private void glControl1_MouseMove(object sender, MouseEventArgs e)
         {
             if (lookMode)

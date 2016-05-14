@@ -33,6 +33,8 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.chckbxCarcass = new System.Windows.Forms.CheckBox();
             this.chckbxProection = new System.Windows.Forms.CheckBox();
+            this.chkbxNormal = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // glControl1
@@ -75,11 +77,34 @@
             this.chckbxProection.UseVisualStyleBackColor = true;
             this.chckbxProection.CheckedChanged += new System.EventHandler(this.chckbxProection_CheckedChanged);
             // 
+            // chkbxNormal
+            // 
+            this.chkbxNormal.AutoSize = true;
+            this.chkbxNormal.Location = new System.Drawing.Point(1065, 85);
+            this.chkbxNormal.Name = "chkbxNormal";
+            this.chkbxNormal.Size = new System.Drawing.Size(147, 17);
+            this.chkbxNormal.TabIndex = 1;
+            this.chkbxNormal.Text = "Сглаживание нормалей";
+            this.chkbxNormal.UseVisualStyleBackColor = true;
+            this.chkbxNormal.CheckedChanged += new System.EventHandler(this.chkbxNormal_CheckedChanged);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(1065, 108);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(147, 17);
+            this.checkBox1.TabIndex = 1;
+            this.checkBox1.Text = "Сглаживание нормалей";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1253, 601);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.chkbxNormal);
             this.Controls.Add(this.chckbxProection);
             this.Controls.Add(this.chckbxCarcass);
             this.Controls.Add(this.glControl1);
@@ -96,6 +121,8 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox chckbxCarcass;
         private System.Windows.Forms.CheckBox chckbxProection;
+        private System.Windows.Forms.CheckBox chkbxNormal;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
