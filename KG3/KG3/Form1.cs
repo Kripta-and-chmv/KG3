@@ -51,7 +51,7 @@ namespace KG3
 
             cam.Resize(glControl1.Width, glControl1.Height);
 
-            texId = Texture.LoadTexture("texture.bmp");
+            texId = Texture.LoadTexture("1.bmp");
             timer1.Start();
         }
 
@@ -79,13 +79,10 @@ namespace KG3
             cam.Update();
             GL.LoadMatrix(ref cam.Matrix);
 
-            Figure f = new Figure();
+            Figure f = new Figure(texId);
             f.DrawCarcass();
             if(!chckbxCarcass.Checked)
                 f.DrawSurface();
-            //свет
-            if (checkBox1.Checked)
-                Lighting.On();
 
             glControl1.SwapBuffers();
         }
@@ -155,6 +152,15 @@ namespace KG3
             else
                 GL.Disable(EnableCap.Normalize);
         }
+
+        private void chckbxLight_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chckbxLight.Checked)
+                Lighting.On();
+            else
+                Lighting.Off();
+        }
+
         private void glControl1_MouseMove(object sender, MouseEventArgs e)
         {
             if (lookMode)

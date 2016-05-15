@@ -34,7 +34,7 @@
             this.chckbxCarcass = new System.Windows.Forms.CheckBox();
             this.chckbxProection = new System.Windows.Forms.CheckBox();
             this.chkbxNormal = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chckbxLight = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // glControl1
@@ -88,22 +88,23 @@
             this.chkbxNormal.UseVisualStyleBackColor = true;
             this.chkbxNormal.CheckedChanged += new System.EventHandler(this.chkbxNormal_CheckedChanged);
             // 
-            // checkBox1
+            // chckbxLight
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(1065, 108);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(147, 17);
-            this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "Сглаживание нормалей";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chckbxLight.AutoSize = true;
+            this.chckbxLight.Location = new System.Drawing.Point(1065, 108);
+            this.chckbxLight.Name = "chckbxLight";
+            this.chckbxLight.Size = new System.Drawing.Size(85, 17);
+            this.chckbxLight.TabIndex = 1;
+            this.chckbxLight.Text = "Освещение";
+            this.chckbxLight.UseVisualStyleBackColor = true;
+            this.chckbxLight.CheckedChanged += new System.EventHandler(this.chckbxLight_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1253, 601);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.chckbxLight);
             this.Controls.Add(this.chkbxNormal);
             this.Controls.Add(this.chckbxProection);
             this.Controls.Add(this.chckbxCarcass);
@@ -122,7 +123,7 @@
         private System.Windows.Forms.CheckBox chckbxCarcass;
         private System.Windows.Forms.CheckBox chckbxProection;
         private System.Windows.Forms.CheckBox chkbxNormal;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chckbxLight;
     }
 }
 
