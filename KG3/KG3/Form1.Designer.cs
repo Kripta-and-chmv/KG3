@@ -36,7 +36,7 @@
             this.chckbxNormalAl = new System.Windows.Forms.CheckBox();
             this.chckbxLight = new System.Windows.Forms.CheckBox();
             this.chckbxNormalView = new System.Windows.Forms.CheckBox();
-            this.chcknxTexture = new System.Windows.Forms.CheckBox();
+            this.chckbxTexture = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // glControl1
@@ -112,23 +112,23 @@
             this.chckbxNormalView.UseVisualStyleBackColor = true;
             this.chckbxNormalView.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // chcknxTexture
+            // chckbxTexture
             // 
-            this.chcknxTexture.AutoSize = true;
-            this.chcknxTexture.Location = new System.Drawing.Point(1068, 214);
-            this.chcknxTexture.Name = "chcknxTexture";
-            this.chcknxTexture.Size = new System.Drawing.Size(145, 17);
-            this.chcknxTexture.TabIndex = 1;
-            this.chcknxTexture.Text = "Отображение текстуры";
-            this.chcknxTexture.UseVisualStyleBackColor = true;
-            this.chcknxTexture.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.chckbxTexture.AutoSize = true;
+            this.chckbxTexture.Location = new System.Drawing.Point(1068, 214);
+            this.chckbxTexture.Name = "chckbxTexture";
+            this.chckbxTexture.Size = new System.Drawing.Size(145, 17);
+            this.chckbxTexture.TabIndex = 1;
+            this.chckbxTexture.Text = "Отображение текстуры";
+            this.chckbxTexture.UseVisualStyleBackColor = true;
+            this.chckbxTexture.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1253, 601);
-            this.Controls.Add(this.chcknxTexture);
+            this.Controls.Add(this.chckbxTexture);
             this.Controls.Add(this.chckbxNormalView);
             this.Controls.Add(this.chckbxLight);
             this.Controls.Add(this.chckbxNormalAl);
@@ -151,7 +151,7 @@
         private System.Windows.Forms.CheckBox chckbxNormalAl;
         private System.Windows.Forms.CheckBox chckbxLight;
         private System.Windows.Forms.CheckBox chckbxNormalView;
-        private System.Windows.Forms.CheckBox chcknxTexture;
+        private System.Windows.Forms.CheckBox chckbxTexture;
     }
 }
 

@@ -91,11 +91,12 @@ namespace KG3
             Figure f = new Figure(texId);
             f.DrawCarcass();
             if (!chckbxCarcass.Checked)
-                f.DrawSurface();
+                f.DrawSurface(chckbxTexture.Checked);
+
             if (chckbxNormalView.Checked)
                 f.DrawNormals(chckbxNormalAl.Checked);
-            if (chcknxTexture.Checked)
-                f.DrawTexture();
+
+            
 
             //проекция
 

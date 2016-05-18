@@ -48,7 +48,7 @@ namespace KG3
             GL.End();
         }
 
-        public void DrawSurface()
+        public void DrawSurface(bool tex)
         {
             //отрисовка поверхностей
             GL.Color3(Color.Red);
@@ -70,7 +70,9 @@ namespace KG3
             {
                 GL.BindTexture(TextureTarget.Texture2D, texId);
                 GL.Begin(BeginMode.QuadStrip);
+                if(tex)
                 {
+                    GL.Color3(Color.White);
                     foreach (var b in Enumerable.Range(0, carcass.Count))
                     {
                         if (b != carcass.Count - 1)
@@ -85,6 +87,21 @@ namespace KG3
                         GL.TexCoord2(i, j);
 
                         j ^= 1;
+                        GL.Vertex3(carcass[b][(a + 1) % n]);
+                    }
+                }
+                else
+                {
+                    foreach (var b in Enumerable.Range(0, carcass.Count))
+                    {
+                        if (b != carcass.Count - 1)
+                        {
+                            GL.Normal3(CalculateNormal(carcass[b][a], carcass[b][(a + 1) % n], carcass[b + 1][(a + 1) % n]));
+
+                        }
+
+                        GL.Vertex3(carcass[b][a]);
+
                         GL.Vertex3(carcass[b][(a + 1) % n]);
                     }
                 }
