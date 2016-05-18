@@ -8,84 +8,182 @@ using System.Threading.Tasks;
 
 namespace KG3
 {
-    class Camera
+    internal class Camera
     {
-        public Vector3 Position = new Vector3(0, 0, -100);
-        public Vector3 Rotation = new Vector3(0, 0, 0);
-        public Quaternion Orientation;
+        private Vector3 _mPos;   // Вектор позиции камеры
+        private Vector3 _mView;   // Направление, куда смотрит камера
+        private Vector3 _mUp;     // Вектор верхнего направления
+        private Vector3 _mStrafe; // Вектор для стрейфа (движения влево и вправо) камеры
 
-        public Matrix4 Matrix;
-        public Matrix4 Model;
-        public Matrix4 Projection;
-
-        public Camera()
+        public void Look()
         {
-            Matrix = Matrix4.Identity;
-            Projection = Matrix4.Identity;
-            Orientation = Quaternion.Identity;
+            var lookat = Matrix4.LookAt(_mPos, _mView, _mUp);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref lookat);
+        }
+        public void UpDown(float speed)
+        {
+            _mPos.Y += speed;
+        }
+        public void MoveXZCamera(float speed)
+        {
+            var vVector = Vector3.Normalize(_mView - _mPos); // Получаем вектор взгляда
+
+            _mPos.X += vVector.X * speed;
+            _mPos.Z += vVector.Z * speed;
+            _mView.X += vVector.X * speed;
+            _mView.Z += vVector.Z * speed;
+        }
+        public void Zoom(float delta)
+        {
+            var vVector = _mView - _mPos; // Получаем вектор взгляда
+            if (vVector.Length < 30 || delta > 0)
+            {
+                vVector = Vector3.Normalize(vVector);
+                var vTemp = _mPos + (vVector * delta);
+                if (vTemp.X / _mPos.X > 0 || vTemp.X / _mPos.X > 0 || vTemp.X / _mPos.X > 0)
+                    _mPos = vTemp;
+            }
+        }
+        public void MoveYCamera(float speed)
+        {
+            _mView.Y += speed;
+        }
+        public void Strafe(float speed)
+        {
+            // добавим вектор стрейфа к позиции
+            _mPos.X += _mStrafe.X * speed;
+            _mPos.Z += _mStrafe.Z * speed;
+
+            // Добавим теперь к взгляду
+            _mView.X += _mStrafe.X * speed;
+            _mView.Z += _mStrafe.Z * speed;
+        }
+        public void Rotate_Position(float angle, float x, float y, float z)
+        {
+            _mPos = _mPos - _mView;
+
+            var vVector = _mPos;
+            Vector3 aVector;
+
+            var sinA = (float)Math.Sin(Math.PI * angle / 180.0);
+            var cosA = (float)Math.Cos(Math.PI * angle / 180.0);
+
+            // Найдем новую позицию X для вращаемой точки 
+            aVector.X = (cosA + (1 - cosA) * x * x) * vVector.X;
+            aVector.X += ((1 - cosA) * x * y - z * sinA) * vVector.Y;
+            aVector.X += ((1 - cosA) * x * z + y * sinA) * vVector.Z;
+
+            // Найдем позицию Y 
+            aVector.Y = ((1 - cosA) * x * y + z * sinA) * vVector.X;
+            aVector.Y += (cosA + (1 - cosA) * y * y) * vVector.Y;
+            aVector.Y += ((1 - cosA) * y * z - x * sinA) * vVector.Z;
+
+            // И позицию Z 
+            aVector.Z = ((1 - cosA) * x * z - y * sinA) * vVector.X;
+            aVector.Z += ((1 - cosA) * y * z + x * sinA) * vVector.Y;
+            aVector.Z += (cosA + (1 - cosA) * z * z) * vVector.Z;
+
+            _mPos = _mView + aVector;
+        }
+        public void Position_Camera(float posX, float posY, float posZ,
+                float viewX, float viewY, float viewZ,
+                float upX, float upY, float upZ)
+        {
+            _mPos.X = posX; // Позиция камеры
+            _mPos.Y = posY; //
+            _mPos.Z = posZ; //
+            _mView.X = viewX; // Куда смотрит, т.е. взгляд
+            _mView.Y = viewY; //
+            _mView.Z = viewZ; //
+            _mUp.X = upX; // Вертикальный вектор камеры
+            _mUp.Y = upY; //
+            _mUp.Z = upZ; //
+        }
+
+        public double GetPosX() // Возвращает позицию камеры по Х
+        {
+            return _mPos.X;
+        }
+
+        public double GetPosY() // Возвращает позицию камеры по Y
+        {
+            return _mPos.Y;
+        }
+
+        public double GetPosZ() // Возвращает позицию камеры по Z
+        {
+            return _mPos.Z;
+        }
+
+        public double GetViewX() // Возвращает позицию взгляда по Х
+        {
+            return _mView.X;
+        }
+
+        public double GetViewY() // Возвращает позицию взгляда по Y
+        {
+            return _mView.Y;
+        }
+
+        public double GetViewZ() // Возвращает позицию взгляда по Z
+        {
+            return _mView.Z;
         }
 
         public void Update()
         {
-            Orientation =
-                Quaternion.FromAxisAngle(Vector3.UnitY, Rotation.Y) *
-                Quaternion.FromAxisAngle(Vector3.UnitX, Rotation.X);
+            Vector3 vCross = Cross(_mView, _mPos, _mUp);
 
-            var forward = Vector3.Transform(Vector3.UnitZ, Orientation);
-            Model = Matrix4.LookAt(Position, Position + forward, Vector3.UnitY);
-
-            Matrix = Model * Projection;
+            // Нормализуем вектор стрейфа
+            _mStrafe = Vector3.Normalize(vCross);
         }
 
-        public void Resize(int width, int height)
+        private static Vector3 Cross(Vector3 vV1, Vector3 vV2, Vector3 vVector2)
         {
-            Projection = OpenTK.Matrix4.CreatePerspectiveFieldOfView(
-                OpenTK.MathHelper.PiOver4, (float)width / height, 0.1f, 1000f
-            );
+            Vector3 vNormal;
+            Vector3 vVector1;
+            vVector1 = vV1 - vV2;
+
+            // Если у нас есть 2 вектора (вектор взгляда и вертикальный вектор), 
+            // У нас есть плоскость, от которой мы можем вычислить угол в 90 градусов.
+            // Рассчет cross'a прост, но его сложно запомнить с первого раза. 
+            // Значение X для вектора = (V1.y * V2.z) - (V1.z * V2.y)
+            vNormal.X = ((vVector1.Y * vVector2.Z) - (vVector1.Z * vVector2.Y));
+
+            // Значение Y = (V1.z * V2.x) - (V1.x * V2.z)
+            vNormal.Y = ((vVector1.Z * vVector2.X) - (vVector1.X * vVector2.Z));
+
+            // Значение Z = (V1.x * V2.y) - (V1.y * V2.x)
+            vNormal.Z = ((vVector1.X * vVector2.Y) - (vVector1.Y * vVector2.X));
+
+            // *ВАЖНО* Вы не можете менять этот порядок, иначе ничего не будет работать.
+            // Должно быть именно так, как здесь. Просто запомните, если вы ищите Х, вы не
+            // используете значение X двух векторов, и то же самое для Y и Z. Заметьте,
+            // вы рассчитываете значение из двух других осей и никогда из той же самой.
+
+            // Итак, зачем всё это? Нам нужно найти ось, вокруг которой вращаться. Вращение камеры
+            // влево и вправо простое - вертикальная ось всегда (0, 1, 0). 
+            // Вращение камеры вверх и вниз отличается, так как оно происходит вне 
+            // глобальных осей. Достаньте себе книгу по линейной алгебре, если у вас 
+            // её ещё нет, она вам пригодится.
+
+            // вернем результат.
+            return vNormal;
         }
 
-        public void TurnX(float a)
+        public void RotateXY(float fi, float theta)
         {
-            Rotation.X += a;
-            Rotation.X = OpenTK.MathHelper.Clamp(Rotation.X, -1.57f, 1.57f);
+            Rotate_Position(fi, 0, 1, 0);
+            Rotate_Position(theta, _mStrafe.X, _mStrafe.Y, _mStrafe.Z);
+            if (_mPos.X * _mPos.X + _mPos.Z * _mPos.Z - _mView.X * _mView.X - _mView.Z * _mView.Z < 5 || _mPos.Y < 0.1)
+                Rotate_Position(-theta, _mStrafe.X, _mStrafe.Y, _mStrafe.Z);
         }
 
-        public void TurnY(float a)
+        public float GetMagnitude()
         {
-            Rotation.Y += a;
-            Rotation.Y = ClampCircular(Rotation.Y, 0, OpenTK.MathHelper.TwoPi);
+            return (_mView - _mPos).Length;
         }
 
-        public void MoveX(float a)
-        {
-            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitX * a, OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y));
-        }
-
-        public void MoveY(float a)
-        {
-            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitY * a, OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y));
-        }
-
-        public void MoveZ(float a)
-        {
-            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitZ * a, OpenTK.Quaternion.FromAxisAngle(OpenTK.Vector3.UnitY, Rotation.Y));
-        }
-
-        public void MoveYLocal(float a)
-        {
-            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitY * a, Orientation);
-        }
-
-        public void MoveZLocal(float a)
-        {
-            Position += OpenTK.Vector3.Transform(OpenTK.Vector3.UnitZ * a, Orientation);
-        }
-
-        public static float ClampCircular(float n, float min, float max)
-        {
-            if (n >= max) n -= max;
-            if (n < min) n += max;
-            return n;
-        }
     }
 }

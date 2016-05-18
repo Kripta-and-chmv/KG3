@@ -14,19 +14,25 @@ namespace KG3
 {
     public partial class Form1 : Form
     {
-        Camera cam;
         private bool lookMode = false;
         private bool loaded = false;
-        private bool IsOrtho = false;
         private bool IsNormalized = false;
         private int texId;
+        private readonly Camera _camera = new Camera();
 
-        private Point mouseCoord = new Point(0, 0), //Текущие координаты
-            mouseCoordTemp = new Point(0, 0); //Предыдущие координаты
+
+        private bool _mouseRotate;
+        private bool _mouseXzMove;
+        private bool _mouseYMove;
+        private int _myMouseYcoord;
+        private int _myMouseXcoord;
+        private int _myMouseYcoordVar;
+        private int _myMouseXcoordVar;
 
         public Form1()
         {
             InitializeComponent();
+            glControl1.MouseWheel += new MouseEventHandler(glControl1_MouseWheel);
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -36,22 +42,16 @@ namespace KG3
             GL.Enable(EnableCap.DepthTest);
             GL.Viewport(0, 0, glControl1.ClientSize.Width, glControl1.ClientSize.Height);
 
-
-            float aspect_ratio = Width / (float)Height;
-            Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(50 * Math.PI / 180), aspect_ratio, 10, 200);
-            Matrix4 ortho = Matrix4.CreateOrthographic(Width, Height, 10, 200);
-
-            GL.MatrixMode(MatrixMode.Projection);
-
-            if (chckbxProection.Checked) GL.LoadMatrix(ref ortho);
-                else GL.LoadMatrix(ref perspect);
-            //GL.MatrixMode(MatrixMode.Modelview);
-
-            cam = new Camera {};
-
-            cam.Resize(glControl1.Width, glControl1.Height);
-
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             texId = Texture.LoadTexture("1.bmp");
+
+
+            SwitchProjection();
+            _camera.Position_Camera(0, 0, -200, 0, 0, 0, 0, 10, 0);
+
+
             timer1.Start();
         }
 
@@ -63,6 +63,7 @@ namespace KG3
             GL.LoadIdentity();
             GL.Ortho(0, w, 0, h, -1, 1); // Верхний левый угол имеет кооординаты(0, 0)
             GL.Viewport(0, 0, w, h); // Использовать всю поверхность GLControl под рисование
+            GL.MatrixMode(MatrixMode.Modelview);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -74,114 +75,152 @@ namespace KG3
         {
             if (!loaded)
                 return;
-
+            GL.LoadIdentity();
+            mouse_Events();
+            _camera.Update();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            cam.Update();
-            GL.LoadMatrix(ref cam.Matrix);
+            _camera.Look();
+
+            //свет
+            if (chckbxLight.Checked)
+                Lighting.On();
+            else
+                Lighting.Off();
+
 
             Figure f = new Figure(texId);
             f.DrawCarcass();
-            if(!chckbxCarcass.Checked)
+            if (!chckbxCarcass.Checked)
                 f.DrawSurface();
 
+            f.DrawNormals(chckbxNormalAl.Checked);
+            if (chcknxTexture.Checked)
+                f.DrawTexture();
+
+            //проекция
+
+            SwitchProjection();
+
+            GL.Disable(EnableCap.Light0);
             glControl1.SwapBuffers();
         }
 
         private void SwitchProjection()
         {
-            IsOrtho = !IsOrtho;
 
-            float aspect_ratio = Width / (float)Height;
+            var aspectRatio = glControl1.Width / (float)glControl1.Height;
             GL.MatrixMode(MatrixMode.Projection);
 
-            Matrix4 perspect = Matrix4.CreatePerspectiveFieldOfView((float)(90 * Math.PI / 180), aspect_ratio, 20, 500);
-            Matrix4 ortho = Matrix4.CreateOrthographic(Width, Height, 500, 500);
+            var perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 500);
+            var ortho = Matrix4.CreateOrthographic(20 * aspectRatio, 20, 1, 500);
 
-            if (IsOrtho) GL.LoadMatrix(ref ortho);
-            else GL.LoadMatrix(ref perspect);
+            if (chckbxProection.Checked)
+                GL.LoadMatrix(ref ortho);
+            else
+                GL.LoadMatrix(ref perpective);
 
             GL.MatrixMode(MatrixMode.Modelview);
         }
 
-        private void glControl1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!loaded) return;
-            if (e.KeyCode == Keys.Q)
-                cam.MoveY(1);
-            if (e.KeyCode == Keys.E)
-                cam.MoveY(-1);
-            if (e.KeyCode == Keys.A)
-                cam.MoveX(1);
-            if (e.KeyCode == Keys.D)
-                cam.MoveX(-1);
-
-            if (e.KeyCode == Keys.W)
-                cam.MoveZ(1);
-            if (e.KeyCode == Keys.S)
-                cam.MoveZ(-1);
-        }
-
-        private void glControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-            lookMode = true;
-            glControl1.Cursor = Cursors.SizeAll; //меняем указатель
-            mouseCoord.X = e.X;
-            mouseCoord.Y = e.Y;
-        }
-
-        private void glControl1_MouseUp(object sender, MouseEventArgs e)
-        {
-            lookMode = false;
-            glControl1.Cursor = Cursors.Arrow; //меняем указатель
-        }
-
         private void chckbxProection_CheckedChanged(object sender, EventArgs e)
         {
-            SwitchProjection();
         }
 
         private void chkbxNormal_CheckedChanged(object sender, EventArgs e)
         {
-            SwitchNormalize();
         }
-        private void SwitchNormalize()
-        {
-            IsNormalized = !IsNormalized;
-            if (IsNormalized)
-                GL.Enable(EnableCap.Normalize);
-            else
-                GL.Disable(EnableCap.Normalize);
-        }
+      
 
         private void chckbxLight_CheckedChanged(object sender, EventArgs e)
         {
-            if (chckbxLight.Checked)
-                Lighting.On();
-            else
-                Lighting.Off();
+
+        }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
+
+        private void glControl1_KeyDown(object sender, KeyEventArgs e)
+        {
+            //if (!loaded) return;
+            //if (e.KeyCode == Keys.Q)
+            //    cam.MoveY(1);
+            //if (e.KeyCode == Keys.E)
+            //    cam.MoveY(-1);
+            //if (e.KeyCode == Keys.A)
+            //    cam.MoveX(1);
+            //if (e.KeyCode == Keys.D)
+            //    cam.MoveX(-1);
+
+            //if (e.KeyCode == Keys.W)
+            //    cam.MoveZ(1);
+            //if (e.KeyCode == Keys.S)
+            //    cam.MoveZ(-1);
+        }
+        private void glControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                _mouseRotate = true; // Если нажата левая кнопка мыши
+
+            if (e.Button == MouseButtons.Right)
+                _mouseXzMove = true; // Если нажата правая кнопка мыши
+
+            if (e.Button == MouseButtons.Middle)
+                _mouseYMove = true;// Если нажата средняя кнопка мыши
+
+            _myMouseYcoord = e.X; // Передаем в нашу глобальную переменную позицию мыши по Х
+            _myMouseXcoord = e.Y;
+        }
+        private void glControl1_MouseUp(object sender, MouseEventArgs e)
+        {
+            glControl1.Cursor = Cursors.Arrow; //меняем указатель
+            _mouseRotate = _mouseXzMove = _mouseYMove = false;
+        }
         private void glControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (lookMode)
+            _myMouseXcoordVar = e.Y;
+            _myMouseYcoordVar = e.X;
+        }
+        private void glControl1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            _camera.Zoom(e.Delta / 100.0f);
+        }
+        private void mouse_Events()
+        {
+            if (_mouseRotate)  // Если нажата левая кнопка мыши
             {
-                mouseCoordTemp.X = e.X;
-                mouseCoordTemp.Y = e.Y;
+                glControl1.Cursor = Cursors.SizeAll; //меняем указатель
 
-                var mouseX = mouseCoord.X - mouseCoordTemp.X;
-                var mouseY = mouseCoord.Y - mouseCoordTemp.Y;
+                _camera.RotateXY(_myMouseYcoordVar - _myMouseYcoord, _myMouseXcoordVar - _myMouseXcoord);
 
-                if (Math.Abs(mouseX) > Math.Abs(mouseY))
-                    if (mouseX > 0)
-                        cam.TurnY(0.05f);
-                    else
-                        cam.TurnY(-0.05f);
-                else if (mouseY > 0)
-                    cam.TurnX(-0.05f);
-                else
-                    cam.TurnX(0.05f);
+                _myMouseYcoord = _myMouseYcoordVar;
+                _myMouseXcoord = _myMouseXcoordVar;
+            }
+            else if (_mouseXzMove)
+            {
+                glControl1.Cursor = Cursors.SizeAll;
 
-                mouseCoord = mouseCoordTemp;
+                _camera.MoveXZCamera((float)(_myMouseXcoordVar - _myMouseXcoord) / 50);
+                _camera.Strafe(-((float)(_myMouseYcoordVar - _myMouseYcoord) / 50));
+
+                _myMouseYcoord = _myMouseYcoordVar;
+                _myMouseXcoord = _myMouseXcoordVar;
+
+            }
+            else if (_mouseYMove)
+            {
+                glControl1.Cursor = Cursors.SizeAll;
+
+                _camera.MoveYCamera((float)(_myMouseXcoordVar - _myMouseXcoord) / 50);
+
+                _myMouseYcoord = _myMouseYcoordVar;
+                _myMouseXcoord = _myMouseXcoordVar;
+
+            }
+            else
+            {
+                glControl1.Invoke(new Action(() => glControl1.Cursor = Cursors.Default)); // возвращаем курсор
             }
         }
     }

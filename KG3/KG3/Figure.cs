@@ -71,72 +71,118 @@ namespace KG3
                 GL.BindTexture(TextureTarget.Texture2D, texId);
                 GL.Begin(BeginMode.QuadStrip);
                 {
-
-                    GL.Material(MaterialFace.Front, MaterialParameter.AmbientAndDiffuse, new[] {0.2f, 0.2f, 0.2f, 1f});
-                   
                     foreach (var b in Enumerable.Range(0, carcass.Count))
                     {
                         if (b != carcass.Count - 1)
                         {
-                            GL.Normal3(CalculateNormal(carcass[b][a], carcass[b][(a + 1)%n], carcass[b + 1][(a + 1)%n]));
+                            GL.Normal3(CalculateNormal(carcass[b][a], carcass[b][(a + 1) % n], carcass[b + 1][(a + 1) % n]));
 
                         }
-                        GL.TexCoord2(i, j);
-                        i ^= 1;
+                      //  GL.TexCoord2(i, j);
+
+                        //i ^= 1;
                         GL.Vertex3(carcass[b][a]);
-                        GL.TexCoord2(i, j);
-                        j ^= 1;
-                        GL.Vertex3(carcass[b][(a + 1)%n]);
+                      //  GL.TexCoord2(i, j);
+
+                     //   j ^= 1;
+                        GL.Vertex3(carcass[b][(a + 1) % n]);
                     }
                 }
                 GL.End();
             }
-            ////Отрисовка нормалей
-            #region Нормали
-            GL.Begin(BeginMode.Lines);
-            for (i = 1; i < carcass.Count; i++)
-            {
-                if (i != carcass.Count - 1)
-                    for (j = 0; j < 5; j++)
-                    {
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                        GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i + 1][(j + 1) % 5], carcass[i][(j + 2) % 5]));
-
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                        GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][j], carcass[i + 1][(j + 1) % 5]));
-
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                        GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][(j + 2) % 5], carcass[i - 1][(j + 1) % 5]));
-
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                        GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i - 1][(j + 1) % 5], carcass[i][j]));
-                    }
-                else
-                    for (j = 0; j < 5; j++)
-                    {
-                        GL.Vertex3(carcass[0][(j + 1) % 5]);
-                        GL.Vertex3(carcass[0][(j + 1) % 5] + CalculateNormal(carcass[0][(j + 1) % 5], carcass[0][(j + 2) % 5], carcass[0][j]));
-
-                        GL.Vertex3(carcass[0][(j + 1) % 5]);
-                        GL.Vertex3(carcass[0][(j + 1) % 5] + CalculateNormal(carcass[0][(j + 1) % 5], carcass[1][(j + 1) % 5], carcass[0][(j + 2) % 5]));
-
-                        GL.Vertex3(carcass[0][(j + 1) % 5]);
-                        GL.Vertex3(carcass[0][(j + 1) % 5] + CalculateNormal(carcass[0][(j + 1) % 5], carcass[0][j], carcass[1][(j + 1) % 5]));
-
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                        GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][j], carcass[i][(j + 2) % 5]));
-
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                        GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][(j + 2) % 5], carcass[i - 1][(j + 1) % 5]));
-
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                        GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i - 1][(j + 1) % 5], carcass[i][j]));
-                    }
-            }
-            GL.End();
-#endregion
 
         }
+        public void DrawNormals(bool al)
+        {
+            
+            GL.Color3(Color.Green);
+            GL.Begin(BeginMode.Lines);
+           
+                for (int i = 1; i < carcass.Count; i++)
+                {
+                    if (i != carcass.Count - 1)
+                        for (int j = 0; j < 5; j++)
+                        {
+                        //GL.Vertex3(carcass[i][(j + 1) % 5]);
+                        //GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i + 1][(j + 1) % 5], carcass[i][(j + 2) % 5]));
+
+                        var a = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][j], carcass[i + 1][(j + 1) % 5]);
+                        var b = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][(j + 2) % 5], carcass[i - 1][(j + 1) % 5]);
+                        var c = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i - 1][(j + 1) % 5], carcass[i][j]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + a);
+
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + b);
+
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + c);
+                        }
+                    else
+                        for (int j = 0; j < 5; j++)
+                        {
+                        var a = CalculateNormal(carcass[0][(j + 1) % 5], carcass[0][(j + 2) % 5], carcass[0][j]);
+                        var b = CalculateNormal(carcass[0][(j + 1) % 5], carcass[1][(j + 1) % 5], carcass[0][(j + 2) % 5]);
+                        var c = CalculateNormal(carcass[0][(j + 1) % 5], carcass[0][j], carcass[1][(j + 1) % 5]);
+                        GL.Vertex3(carcass[0][(j + 1) % 5]);
+                            GL.Vertex3(carcass[0][(j + 1) % 5] + a);
+
+                            GL.Vertex3(carcass[0][(j + 1) % 5]);
+                            GL.Vertex3(carcass[0][(j + 1) % 5] + b);
+
+                            GL.Vertex3(carcass[0][(j + 1) % 5]);
+                            GL.Vertex3(carcass[0][(j + 1) % 5] + c);
+
+                        a = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][j], carcass[i][(j + 2) % 5]);
+                        b = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][(j + 2) % 5], carcass[i - 1][(j + 1) % 5]);
+                        c = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i - 1][(j + 1) % 5], carcass[i][j]);
+
+                        GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + a);
+
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + b);
+
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + c);
+                        }
+                }
+            
+            GL.End();
+        }
+
+        public void DrawTexture()
+        {
+            int n = carcass.Select(x => x.Count).Min();
+
+            int i = 0, j = 0;
+            GL.Color3(Color.White);
+            foreach (var a in Enumerable.Range(0, n))
+            {
+                GL.BindTexture(TextureTarget.Texture2D, texId);
+                GL.Begin(BeginMode.QuadStrip);
+                {
+                    foreach (var b in Enumerable.Range(0, carcass.Count))
+                    {
+                        if (b != carcass.Count - 1)
+                        {
+                            GL.Normal3(CalculateNormal(carcass[b][a], carcass[b][(a + 1) % n], carcass[b + 1][(a + 1) % n]));
+
+                        }
+                        GL.TexCoord2(i, j);
+
+                        i ^= 1;
+                        GL.Vertex3(carcass[b][a]);
+                        GL.TexCoord2(i, j);
+
+                        j ^= 1;
+                        GL.Vertex3(carcass[b][(a + 1) % n]);
+                    }
+                }
+                GL.End();
+            }
+        }
+        
 
 
 

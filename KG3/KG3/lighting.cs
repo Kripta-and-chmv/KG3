@@ -25,6 +25,9 @@ namespace KG3
             //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             //GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 0.5f, 0.5f, 0.5f, 0.5f });
             //GL.Light(LightName.Light0, LightParameter.SpotExponent, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, new[] { 0.5f, 0.5f, 0.5f });
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, new[] { 0.5f, 0.5f, 0.5f });
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, 128f);
 
             GL.Enable(EnableCap.ColorMaterial);
         }

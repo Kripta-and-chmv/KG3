@@ -33,8 +33,10 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.chckbxCarcass = new System.Windows.Forms.CheckBox();
             this.chckbxProection = new System.Windows.Forms.CheckBox();
-            this.chkbxNormal = new System.Windows.Forms.CheckBox();
+            this.chckbxNormalAl = new System.Windows.Forms.CheckBox();
             this.chckbxLight = new System.Windows.Forms.CheckBox();
+            this.chckbxNormalView = new System.Windows.Forms.CheckBox();
+            this.chcknxTexture = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // glControl1
@@ -77,16 +79,16 @@
             this.chckbxProection.UseVisualStyleBackColor = true;
             this.chckbxProection.CheckedChanged += new System.EventHandler(this.chckbxProection_CheckedChanged);
             // 
-            // chkbxNormal
+            // chckbxNormalAl
             // 
-            this.chkbxNormal.AutoSize = true;
-            this.chkbxNormal.Location = new System.Drawing.Point(1065, 85);
-            this.chkbxNormal.Name = "chkbxNormal";
-            this.chkbxNormal.Size = new System.Drawing.Size(147, 17);
-            this.chkbxNormal.TabIndex = 1;
-            this.chkbxNormal.Text = "Сглаживание нормалей";
-            this.chkbxNormal.UseVisualStyleBackColor = true;
-            this.chkbxNormal.CheckedChanged += new System.EventHandler(this.chkbxNormal_CheckedChanged);
+            this.chckbxNormalAl.AutoSize = true;
+            this.chckbxNormalAl.Location = new System.Drawing.Point(1065, 85);
+            this.chckbxNormalAl.Name = "chckbxNormalAl";
+            this.chckbxNormalAl.Size = new System.Drawing.Size(147, 17);
+            this.chckbxNormalAl.TabIndex = 1;
+            this.chckbxNormalAl.Text = "Сглаживание нормалей";
+            this.chckbxNormalAl.UseVisualStyleBackColor = true;
+            this.chckbxNormalAl.CheckedChanged += new System.EventHandler(this.chkbxNormal_CheckedChanged);
             // 
             // chckbxLight
             // 
@@ -99,13 +101,37 @@
             this.chckbxLight.UseVisualStyleBackColor = true;
             this.chckbxLight.CheckedChanged += new System.EventHandler(this.chckbxLight_CheckedChanged);
             // 
+            // chckbxNormalView
+            // 
+            this.chckbxNormalView.AutoSize = true;
+            this.chckbxNormalView.Location = new System.Drawing.Point(1065, 131);
+            this.chckbxNormalView.Name = "chckbxNormalView";
+            this.chckbxNormalView.Size = new System.Drawing.Size(148, 17);
+            this.chckbxNormalView.TabIndex = 1;
+            this.chckbxNormalView.Text = "Отображение нормалей";
+            this.chckbxNormalView.UseVisualStyleBackColor = true;
+            this.chckbxNormalView.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // chcknxTexture
+            // 
+            this.chcknxTexture.AutoSize = true;
+            this.chcknxTexture.Location = new System.Drawing.Point(1065, 188);
+            this.chcknxTexture.Name = "chcknxTexture";
+            this.chcknxTexture.Size = new System.Drawing.Size(145, 17);
+            this.chcknxTexture.TabIndex = 1;
+            this.chcknxTexture.Text = "Отображение текстуры";
+            this.chcknxTexture.UseVisualStyleBackColor = true;
+            this.chcknxTexture.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1253, 601);
+            this.Controls.Add(this.chcknxTexture);
+            this.Controls.Add(this.chckbxNormalView);
             this.Controls.Add(this.chckbxLight);
-            this.Controls.Add(this.chkbxNormal);
+            this.Controls.Add(this.chckbxNormalAl);
             this.Controls.Add(this.chckbxProection);
             this.Controls.Add(this.chckbxCarcass);
             this.Controls.Add(this.glControl1);
@@ -122,8 +148,10 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox chckbxCarcass;
         private System.Windows.Forms.CheckBox chckbxProection;
-        private System.Windows.Forms.CheckBox chkbxNormal;
+        private System.Windows.Forms.CheckBox chckbxNormalAl;
         private System.Windows.Forms.CheckBox chckbxLight;
+        private System.Windows.Forms.CheckBox chckbxNormalView;
+        private System.Windows.Forms.CheckBox chcknxTexture;
     }
 }
 
