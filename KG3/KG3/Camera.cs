@@ -37,13 +37,24 @@ namespace KG3
         public void Zoom(float delta)
         {
             var vVector = _mView - _mPos; // Получаем вектор взгляда
-            if (vVector.Length < 30 || delta > 0)
+            if (vVector.Length < 30 || delta > 0)//приближение
             {
                 vVector = Vector3.Normalize(vVector);
-                var vTemp = _mPos + (vVector * delta);
-                if (vTemp.X / _mPos.X > 0 || vTemp.X / _mPos.X > 0 || vTemp.X / _mPos.X > 0)
+                var vTemp = _mPos + (vVector*delta);
+                if (vTemp.X/_mPos.X > 0 || vTemp.X/_mPos.X > 0 || vTemp.X/_mPos.X > 0)
                     _mPos = vTemp;
             }
+            else
+            {
+                if (delta < 0)//отдаление
+                {
+                    vVector = Vector3.Normalize(vVector);
+                    var vTemp = _mPos + (vVector*delta);
+                    if (vTemp.X/_mPos.X > 0 || vTemp.X/_mPos.X > 0 || vTemp.X/_mPos.X > 0)
+                        _mPos = vTemp;
+                }
+            }
+
         }
         public void MoveYCamera(float speed)
         {
