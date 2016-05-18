@@ -82,7 +82,7 @@
             // chckbxNormalAl
             // 
             this.chckbxNormalAl.AutoSize = true;
-            this.chckbxNormalAl.Location = new System.Drawing.Point(1065, 85);
+            this.chckbxNormalAl.Location = new System.Drawing.Point(1066, 154);
             this.chckbxNormalAl.Name = "chckbxNormalAl";
             this.chckbxNormalAl.Size = new System.Drawing.Size(147, 17);
             this.chckbxNormalAl.TabIndex = 1;
@@ -93,7 +93,7 @@
             // chckbxLight
             // 
             this.chckbxLight.AutoSize = true;
-            this.chckbxLight.Location = new System.Drawing.Point(1065, 108);
+            this.chckbxLight.Location = new System.Drawing.Point(1065, 85);
             this.chckbxLight.Name = "chckbxLight";
             this.chckbxLight.Size = new System.Drawing.Size(85, 17);
             this.chckbxLight.TabIndex = 1;
@@ -115,7 +115,7 @@
             // chcknxTexture
             // 
             this.chcknxTexture.AutoSize = true;
-            this.chcknxTexture.Location = new System.Drawing.Point(1065, 188);
+            this.chcknxTexture.Location = new System.Drawing.Point(1068, 214);
             this.chcknxTexture.Name = "chcknxTexture";
             this.chcknxTexture.Size = new System.Drawing.Size(145, 17);
             this.chcknxTexture.TabIndex = 1;

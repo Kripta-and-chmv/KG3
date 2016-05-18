@@ -92,8 +92,8 @@ namespace KG3
             f.DrawCarcass();
             if (!chckbxCarcass.Checked)
                 f.DrawSurface();
-
-            f.DrawNormals(chckbxNormalAl.Checked);
+            if (chckbxNormalView.Checked)
+                f.DrawNormals(chckbxNormalAl.Checked);
             if (chcknxTexture.Checked)
                 f.DrawTexture();
 
@@ -137,6 +137,10 @@ namespace KG3
         }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            if (!chckbxNormalView.Checked)
+                chckbxNormalAl.Enabled = false;
+            else
+                chckbxNormalAl.Enabled = true;
 
         }
 

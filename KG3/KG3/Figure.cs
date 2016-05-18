@@ -78,13 +78,13 @@ namespace KG3
                             GL.Normal3(CalculateNormal(carcass[b][a], carcass[b][(a + 1) % n], carcass[b + 1][(a + 1) % n]));
 
                         }
-                      //  GL.TexCoord2(i, j);
+                        GL.TexCoord2(i, j);
 
-                        //i ^= 1;
+                        i ^= 1;
                         GL.Vertex3(carcass[b][a]);
-                      //  GL.TexCoord2(i, j);
+                        GL.TexCoord2(i, j);
 
-                     //   j ^= 1;
+                        j ^= 1;
                         GL.Vertex3(carcass[b][(a + 1) % n]);
                     }
                 }
@@ -94,21 +94,23 @@ namespace KG3
         }
         public void DrawNormals(bool al)
         {
-            
+
             GL.Color3(Color.Green);
             GL.Begin(BeginMode.Lines);
-           
-                for (int i = 1; i < carcass.Count; i++)
-                {
-                    if (i != carcass.Count - 1)
-                        for (int j = 0; j < 5; j++)
-                        {
+
+            for (int i = 1; i < carcass.Count; i++)
+            {
+                if (i != carcass.Count - 1)
+                    for (int j = 0; j < 5; j++)
+                    {
                         //GL.Vertex3(carcass[i][(j + 1) % 5]);
                         //GL.Vertex3(carcass[i][(j + 1) % 5] + CalculateNormal(carcass[i][(j + 1) % 5], carcass[i + 1][(j + 1) % 5], carcass[i][(j + 2) % 5]));
 
                         var a = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][j], carcass[i + 1][(j + 1) % 5]);
                         var b = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][(j + 2) % 5], carcass[i - 1][(j + 1) % 5]);
                         var c = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i - 1][(j + 1) % 5], carcass[i][j]);
+                        if (!al)
+                        {
                             GL.Vertex3(carcass[i][(j + 1) % 5]);
                             GL.Vertex3(carcass[i][(j + 1) % 5] + a);
 
@@ -118,13 +120,27 @@ namespace KG3
                             GL.Vertex3(carcass[i][(j + 1) % 5]);
                             GL.Vertex3(carcass[i][(j + 1) % 5] + c);
                         }
-                    else
-                        for (int j = 0; j < 5; j++)
+                        else
                         {
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + a + b + c);
+                        }
+
+                    }
+                else
+                    for (int j = 0; j < 5; j++)
+
+                    {
                         var a = CalculateNormal(carcass[0][(j + 1) % 5], carcass[0][(j + 2) % 5], carcass[0][j]);
                         var b = CalculateNormal(carcass[0][(j + 1) % 5], carcass[1][(j + 1) % 5], carcass[0][(j + 2) % 5]);
                         var c = CalculateNormal(carcass[0][(j + 1) % 5], carcass[0][j], carcass[1][(j + 1) % 5]);
-                        GL.Vertex3(carcass[0][(j + 1) % 5]);
+                        var d = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][j], carcass[i][(j + 2) % 5]);
+                        var e = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][(j + 2) % 5], carcass[i - 1][(j + 1) % 5]);
+                        var f = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i - 1][(j + 1) % 5], carcass[i][j]);
+                        if (!al)
+                        {
+
+                            GL.Vertex3(carcass[0][(j + 1) % 5]);
                             GL.Vertex3(carcass[0][(j + 1) % 5] + a);
 
                             GL.Vertex3(carcass[0][(j + 1) % 5]);
@@ -133,21 +149,29 @@ namespace KG3
                             GL.Vertex3(carcass[0][(j + 1) % 5]);
                             GL.Vertex3(carcass[0][(j + 1) % 5] + c);
 
-                        a = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][j], carcass[i][(j + 2) % 5]);
-                        b = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i][(j + 2) % 5], carcass[i - 1][(j + 1) % 5]);
-                        c = CalculateNormal(carcass[i][(j + 1) % 5], carcass[i - 1][(j + 1) % 5], carcass[i][j]);
 
-                        GL.Vertex3(carcass[i][(j + 1) % 5]);
-                            GL.Vertex3(carcass[i][(j + 1) % 5] + a);
 
                             GL.Vertex3(carcass[i][(j + 1) % 5]);
-                            GL.Vertex3(carcass[i][(j + 1) % 5] + b);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + d);
 
                             GL.Vertex3(carcass[i][(j + 1) % 5]);
-                            GL.Vertex3(carcass[i][(j + 1) % 5] + c);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + e);
+
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + f);
                         }
-                }
-            
+                        else
+                        {
+                            GL.Vertex3(carcass[0][(j + 1) % 5]);
+                            GL.Vertex3(carcass[0][(j + 1) % 5] + a + b + c);
+
+                            GL.Vertex3(carcass[i][(j + 1) % 5]);
+                            GL.Vertex3(carcass[i][(j + 1) % 5] + d + e + f);
+
+                        }
+                    }
+            }
+
             GL.End();
         }
 
