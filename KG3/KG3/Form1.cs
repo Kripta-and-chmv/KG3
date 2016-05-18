@@ -114,7 +114,7 @@ namespace KG3
             GL.MatrixMode(MatrixMode.Projection);
 
             var perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 500);
-            var ortho = Matrix4.CreateOrthographic(20 * aspectRatio, 20, 1, 500);
+            var ortho = Matrix4.CreateOrthographic(80 * aspectRatio, 80, 1, 500);
 
             if (chckbxProection.Checked)
                 GL.LoadMatrix(ref ortho);
