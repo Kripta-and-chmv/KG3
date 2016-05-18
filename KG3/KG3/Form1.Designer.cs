@@ -82,6 +82,7 @@
             // chckbxNormalAl
             // 
             this.chckbxNormalAl.AutoSize = true;
+            this.chckbxNormalAl.Enabled = false;
             this.chckbxNormalAl.Location = new System.Drawing.Point(1066, 154);
             this.chckbxNormalAl.Name = "chckbxNormalAl";
             this.chckbxNormalAl.Size = new System.Drawing.Size(147, 17);
