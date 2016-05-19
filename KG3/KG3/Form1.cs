@@ -28,6 +28,7 @@ namespace KG3
         private int _myMouseXcoord;
         private int _myMouseYcoordVar;
         private int _myMouseXcoordVar;
+        private double rotateZ;
 
         public Form1()
         {
@@ -68,6 +69,7 @@ namespace KG3
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            rotateZ += 0.2d;
             glControl1.Invalidate();
         }
 
@@ -87,7 +89,7 @@ namespace KG3
             else
                 Lighting.Off();
 
-
+            GL.Rotate(rotateZ, 0, 0, 1.0d);
             Figure f = new Figure(texId);
             f.DrawCarcass();
             if (chckbxNormalView.Checked)
@@ -95,9 +97,10 @@ namespace KG3
             if (!chckbxCarcass.Checked)
                 f.DrawSurface(chckbxTexture.Checked);
 
-           
+            GL.Rotate(-rotateZ, 0, 0, 1.0d);
 
-            
+
+
 
             //проекция
 
@@ -207,8 +210,8 @@ namespace KG3
             {
                 glControl1.Cursor = Cursors.SizeAll;
 
-                _camera.MoveXZCamera((float)(_myMouseXcoordVar - _myMouseXcoord) / 50);
-                _camera.Strafe(-((float)(_myMouseYcoordVar - _myMouseYcoord) / 50));
+                _camera.MoveXZCamera((float)(_myMouseXcoordVar - _myMouseXcoord) / 10);
+                _camera.Strafe(-((float)(_myMouseYcoordVar - _myMouseYcoord) / 10));
 
                 _myMouseYcoord = _myMouseYcoordVar;
                 _myMouseXcoord = _myMouseXcoordVar;
@@ -218,7 +221,7 @@ namespace KG3
             {
                 glControl1.Cursor = Cursors.SizeAll;
 
-                _camera.MoveYCamera((float)(_myMouseXcoordVar - _myMouseXcoord) / 50);
+                _camera.MoveYCamera((float)(_myMouseXcoordVar - _myMouseXcoord) / 10);
 
                 _myMouseYcoord = _myMouseYcoordVar;
                 _myMouseXcoord = _myMouseXcoordVar;

@@ -20,7 +20,7 @@ namespace KG3
            // GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
             GL.LightModel(LightModelParameter.LightModelLocalViewer, 1);
 
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0f, 0f, -100f });
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1000f, 0f, -100f });
             //GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.3f, 0.3f, 0.3f, 1.0f });
             //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             //GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 0.5f, 0.5f, 0.5f, 0.5f });
