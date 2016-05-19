@@ -40,7 +40,11 @@ namespace KG3
                 {
                     int t = i - 4;
                     string[] k = s[i].Split(' ');
-                    carcass[t].Add(new Vector3d(carcass[t - 1][j].X + int.Parse(k[0]), carcass[t - 1][j].Y + int.Parse(k[1]), carcass[t - 1][j].Z + int.Parse(k[2])));
+                    double rotX, rotY, angle;
+                    angle = double.Parse(k[3])*Math.PI/180;
+                    rotX = (carcass[t - 1][j].X + int.Parse(k[0])) * Math.Cos(angle)- (carcass[t - 1][j].Y + int.Parse(k[1])) *Math.Sin(angle);
+                    rotY= (carcass[t - 1][j].X + int.Parse(k[0])) * Math.Sin(angle) + (carcass[t - 1][j].Y + int.Parse(k[1])) * Math.Cos(angle);
+                    carcass[t].Add(new Vector3d(rotX, rotY, carcass[t - 1][j].Z + int.Parse(k[2])));
                 }
             }
         }
