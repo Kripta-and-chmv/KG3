@@ -78,7 +78,6 @@ namespace KG3
             //отрисовка поверхностей
             GL.BindTexture(TextureTarget.Texture2D, texId);
 
-            GL.Color3(Color.Red);
             int i = 0, j = 0;
             foreach (var tr in carcass)
             {
@@ -101,6 +100,7 @@ namespace KG3
                     }
                     else
                     {
+            GL.Color3(Color.Red);
                         foreach (var v in tr)
                             GL.Vertex3(v);
 
@@ -112,31 +112,32 @@ namespace KG3
 
 
             i = 0; j = 0;
-            foreach (var a in Enumerable.Range(0, n))
+
+            for (int a = 0; a < n; a++)
             {
                 GL.Begin(BeginMode.QuadStrip);
-                if(tex)
+                if (tex)
                 {
                     GL.Color3(Color.White);
-                    foreach (var b in Enumerable.Range(0, carcass.Count))
+                    for (int b = 0; b < carcass.Count; b++)
                     {
                         if (b != carcass.Count - 1)
                         {
                             GL.Normal3(CalculateNormal(carcass[b][a], carcass[b][(a + 1) % n], carcass[b + 1][(a + 1) % n]));
                         }
-                        GL.TexCoord2(i, j);
+                        GL.TexCoord2((a + i) * 0.2f, (float)b / 2);
 
-                        i ^= 1;
+                        i = 1 - i;
                         GL.Vertex3(carcass[b][a]);
-                        GL.TexCoord2(i, j);
-
-                        j ^= 1;
-                        GL.Vertex3(carcass[b][(a + 1) % n]);
+                        GL.TexCoord2((a + i) * 0.2f, (float)b / 2);
                         i = 0;
+                        GL.Vertex3(carcass[b][(a + 1) % n]);
+
                     }
                 }
                 else
                 {
+                    GL.Color3(Color.Red);
                     foreach (var b in Enumerable.Range(0, carcass.Count))
                     {
                         if (b != carcass.Count - 1)
@@ -149,9 +150,9 @@ namespace KG3
                     }
                 }
                 GL.End();
-            }
-
+            }     
         }
+
         public void DrawNormals(bool al)
         {
             GL.Color3(Color.Green);

@@ -35,6 +35,8 @@ namespace KG3
         public static void Off()
         {
             GL.Disable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Light0);
+            GL.Disable(EnableCap.ColorMaterial);
         }
     }
 }
