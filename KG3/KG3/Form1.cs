@@ -18,8 +18,9 @@ namespace KG3
         private bool loaded = false;
         private bool IsNormalized = false;
         private int texId;
+        private int light_mode;
         private readonly Camera _camera = new Camera();
-
+        private RadioButton[] rbuttons;
 
         private bool _mouseRotate;
         private bool _mouseXzMove;
@@ -34,6 +35,7 @@ namespace KG3
         {
             InitializeComponent();
             glControl1.MouseWheel += new MouseEventHandler(glControl1_MouseWheel);
+            rbuttons = new RadioButton[] { rbtn1, rbtn2, rbtn3, rbtn4, rbtn5 };
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -84,8 +86,11 @@ namespace KG3
             _camera.Look();
 
             //свет
+            foreach (var btn in rbuttons)
+                if (btn.Checked)
+                    light_mode = int.Parse(btn.Text);
             if (chckbxLight.Checked)
-                Lighting.On();
+                Lighting.On(light_mode);
             else
                 Lighting.Off();
 
@@ -106,7 +111,9 @@ namespace KG3
 
             SwitchProjection();
 
-            GL.Disable(EnableCap.Light0);
+            Lighting.Off();
+            
+
             glControl1.SwapBuffers();
         }
 

@@ -37,6 +37,11 @@
             this.chckbxLight = new System.Windows.Forms.CheckBox();
             this.chckbxNormalView = new System.Windows.Forms.CheckBox();
             this.chckbxTexture = new System.Windows.Forms.CheckBox();
+            this.rbtn1 = new System.Windows.Forms.RadioButton();
+            this.rbtn2 = new System.Windows.Forms.RadioButton();
+            this.rbtn3 = new System.Windows.Forms.RadioButton();
+            this.rbtn4 = new System.Windows.Forms.RadioButton();
+            this.rbtn5 = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // glControl1
@@ -125,11 +130,71 @@
             this.chckbxTexture.UseVisualStyleBackColor = true;
             this.chckbxTexture.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // rbtn1
+            // 
+            this.rbtn1.AutoSize = true;
+            this.rbtn1.Location = new System.Drawing.Point(1068, 257);
+            this.rbtn1.Name = "rbtn1";
+            this.rbtn1.Size = new System.Drawing.Size(31, 17);
+            this.rbtn1.TabIndex = 2;
+            this.rbtn1.TabStop = true;
+            this.rbtn1.Text = "1";
+            this.rbtn1.UseVisualStyleBackColor = true;
+            // 
+            // rbtn2
+            // 
+            this.rbtn2.AutoSize = true;
+            this.rbtn2.Location = new System.Drawing.Point(1068, 280);
+            this.rbtn2.Name = "rbtn2";
+            this.rbtn2.Size = new System.Drawing.Size(31, 17);
+            this.rbtn2.TabIndex = 2;
+            this.rbtn2.TabStop = true;
+            this.rbtn2.Text = "2";
+            this.rbtn2.UseVisualStyleBackColor = true;
+            // 
+            // rbtn3
+            // 
+            this.rbtn3.AutoSize = true;
+            this.rbtn3.Location = new System.Drawing.Point(1068, 303);
+            this.rbtn3.Name = "rbtn3";
+            this.rbtn3.Size = new System.Drawing.Size(31, 17);
+            this.rbtn3.TabIndex = 2;
+            this.rbtn3.TabStop = true;
+            this.rbtn3.Text = "3";
+            this.rbtn3.UseVisualStyleBackColor = true;
+            // 
+            // rbtn4
+            // 
+            this.rbtn4.AutoSize = true;
+            this.rbtn4.Location = new System.Drawing.Point(1068, 326);
+            this.rbtn4.Name = "rbtn4";
+            this.rbtn4.Size = new System.Drawing.Size(31, 17);
+            this.rbtn4.TabIndex = 2;
+            this.rbtn4.TabStop = true;
+            this.rbtn4.Text = "4";
+            this.rbtn4.UseVisualStyleBackColor = true;
+            // 
+            // rbtn5
+            // 
+            this.rbtn5.AutoSize = true;
+            this.rbtn5.Location = new System.Drawing.Point(1068, 349);
+            this.rbtn5.Name = "rbtn5";
+            this.rbtn5.Size = new System.Drawing.Size(31, 17);
+            this.rbtn5.TabIndex = 2;
+            this.rbtn5.TabStop = true;
+            this.rbtn5.Text = "5";
+            this.rbtn5.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1253, 601);
+            this.Controls.Add(this.rbtn5);
+            this.Controls.Add(this.rbtn4);
+            this.Controls.Add(this.rbtn3);
+            this.Controls.Add(this.rbtn2);
+            this.Controls.Add(this.rbtn1);
             this.Controls.Add(this.chckbxTexture);
             this.Controls.Add(this.chckbxNormalView);
             this.Controls.Add(this.chckbxLight);
@@ -154,6 +219,11 @@
         private System.Windows.Forms.CheckBox chckbxLight;
         private System.Windows.Forms.CheckBox chckbxNormalView;
         private System.Windows.Forms.CheckBox chckbxTexture;
+        private System.Windows.Forms.RadioButton rbtn1;
+        private System.Windows.Forms.RadioButton rbtn2;
+        private System.Windows.Forms.RadioButton rbtn3;
+        private System.Windows.Forms.RadioButton rbtn4;
+        private System.Windows.Forms.RadioButton rbtn5;
     }
 }
 
